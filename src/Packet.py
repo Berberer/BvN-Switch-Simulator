@@ -9,7 +9,7 @@ class Packet(object):
     def get_source(self):
         return self._source
 
-    def get_destionation(self):
+    def get_destination(self):
         return self._destination
 
     def get_arrival_timestep(self):
