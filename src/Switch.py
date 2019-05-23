@@ -16,7 +16,9 @@ class Switch(object):
     def forward_packets(self):
         permutation_matrix = self._schedule.get_random_permutation_matrix()
         for input, forward_plan in enumerate(permutation_matrix):
-            output = forward_plan.index(1)
-            if (len(self._input_queues[input][output]) > 0):
-                print("Forwarded packet {}".format(self._input_queues[input][output][0]))
-                self._input_queues[input][output].pop(0)
+            output_list = forward_plan.tolist()
+            if 1 in output_list:
+                output = output_list.index(1)
+                if (len(self._input_queues[input][output]) > 0):
+                    print("Forwarded packet {}".format(self._input_queues[input][output][0]))
+                    self._input_queues[input][output].pop(0)

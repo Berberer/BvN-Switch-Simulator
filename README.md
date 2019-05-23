@@ -7,7 +7,7 @@ Simluator for Birkhoff–von Neumann scheduling in a switch. Different heuristic
   ```bash
   pip install -r requirements.txt
   ```
-  2) Run the simulator:
+  2) Run the simulator with the desired heuristic. For example in the case of GLJD :
   ```bash
-  python src/Simulator.py
+  python src/Simulator.py gljd
   ```
