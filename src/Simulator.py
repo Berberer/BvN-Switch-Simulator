@@ -1,51 +1,30 @@
-import simpy
-import sys
-import numpy as np
-from Traffic_Generator import Traffic_Generator
-from Switch import Switch
-from Schedule import Schedule
+import click
 from Decomposition_Algorithms import gljd
+from Simulation_Run import Run
 
 # TODO: Add the remaining heuristics
 heuristics = {
     "GLJD": gljd
 }
 
-def traffic_generation_step(env, tick):
-    while True:
-        generated_packets = traffic_generator.generate_packets(tick)
-        switch.packets_arrive(generated_packets)
-        print("Generated traffic in step {}: {}".format(
-            tick, ', '.join(str(x) for x in generated_packets)
-            )
-        )
-        yield env.timeout(tick)
+@click.command()
+@click.option(
+    "--heuristic",
+    type=click.Choice(heuristics.keys()),
+    prompt="Desired heuristic",
+    help="Choose the decomposition heuristic to evaluate."
+)
+@click.option(
+    "--runs",
+    type=click.IntRange(min=1),
+    prompt="Number of runs",
+    help="Select how many simulation runs shall be perfomed, but at least 1."
+)
+def simulate(heuristic, runs):
+    for i in range(runs):
+        print("##### Run {} #####".format(i + 1))
+        run = Run(heuristics[heuristic], i)
+        print(str(run.evaluate()))
 
-def switch_forwarding_step(env, tick):
-    while True:
-        print("Forwarding:")
-        switch.forward_packets()
-        yield env.timeout(tick)
-
-if len(sys.argv) < 2:
-    print("Parameter missing: HEURISTIC")
-else:
-    selected_heuristic = sys.argv[1]
-    if selected_heuristic.upper() in heuristics:
-        # TODO: Replace hard-coded matrix with a automatically created one
-        traffic_matrix = np.array([
-            [0.38, 0, 0.22, 0.4],
-            [0.11, 0.24, 0.6, 0.05],
-            [0, 0.53, 0.14, 0.33],
-            [0.51, 0.23, 0.04, 0.22]
-        ])
-        env = simpy.Environment()
-        traffic_generator = Traffic_Generator(traffic_matrix)
-        permutation_matrices, probabilities = heuristics[selected_heuristic.upper()](traffic_matrix)
-        schedule = Schedule(permutation_matrices,probabilities)
-        switch = Switch(traffic_matrix.shape[0], traffic_matrix.shape[1], schedule)
-        env.process(traffic_generation_step(env, 1))
-        env.process(switch_forwarding_step(env, 2))
-        env.run(until=10)
-    else:
-        print("Unknown heuristic {}. Simulation cannot be started".format(selected_heuristic))
+if __name__ == "__main__":
+    simulate()
