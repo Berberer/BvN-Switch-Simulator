@@ -1,3 +1,4 @@
+import json
 import click
 from Decomposition_Algorithms import gljd
 from Simulation_Run import Run
@@ -30,7 +31,8 @@ def simulate(heuristic, size, runs):
     for i in range(runs):
         print("##### Run {} #####".format(i + 1))
         run = Run(heuristics[heuristic], size, i)
-        print(str(run.evaluate()))
+        evaluation = run.evaluate()
+        print(json.dumps(evaluation, indent=4))
 
 if __name__ == "__main__":
     simulate()
