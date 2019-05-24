@@ -1,7 +1,7 @@
 import random
 import numpy as np
 from sinkhorn_knopp import sinkhorn_knopp
-from Packet import Packet
+from simulated.Packet import Packet
 
 class Traffic_Generator(object):
 
