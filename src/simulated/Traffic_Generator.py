@@ -1,11 +1,18 @@
 import random
+import numpy as np
+from sinkhorn_knopp import sinkhorn_knopp
 from Packet import Packet
 
 class Traffic_Generator(object):
 
-    def __init__(self, traffic_matrix):
+    def __init__(self, size, seed):
         super(Traffic_Generator, self).__init__()
-        self._traffic_matrix = traffic_matrix
+        np.random.seed(seed)
+        sk = sinkhorn_knopp.SinkhornKnopp()
+        self._traffic_matrix = sk.fit(np.random.rand(size, size))
+
+    def get_traffic_matric(self):
+        return self._traffic_matrix
 
     def generate_packets(self, timestep):
         packets = []

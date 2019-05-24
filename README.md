@@ -12,9 +12,9 @@ pip install -r requirements.txt
 ```bash
 python src/Simulator.py
 ```
-* Specify your configuration manually. For example in the case of GLJD and 5 simulation runs:
+* Specify your configuration manually. For example in the case of GLJD and 5 simulation runs for a 2x2 Switch:
 ```bash
-python src/Simulator.py --heuristic GLJD --runs 5
+python src/Simulator.py --heuristic GLJD --size 3 --runs 5
 ```
 * Get an explanation of a configuration parameters:
 ```bash

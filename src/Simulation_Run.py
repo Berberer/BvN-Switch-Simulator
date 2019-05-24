@@ -7,21 +7,16 @@ from simulated.Schedule import Schedule
 
 class Run(object):
 
-    def __init__(self, heuristic, seed):
+    def __init__(self, heuristic, size, seed):
         super(Run, self).__init__()
         self._heuristic = heuristic
         random.seed(seed)
-        # TODO: Replace hard-coded matrix with a automatically created one
-        traffic_matrix = np.array([
-            [0.38, 0, 0.22, 0.4],
-            [0.11, 0.24, 0.6, 0.05],
-            [0, 0.53, 0.14, 0.33],
-            [0.51, 0.23, 0.04, 0.22]
-        ])
-        self._traffic_generator = Traffic_Generator(traffic_matrix)
+        self._traffic_generator = Traffic_Generator(size, seed)
+        traffic_matrix = self._traffic_generator.get_traffic_matric()
+        print(traffic_matrix)
         permutation_matrices, probabilities = self._heuristic(traffic_matrix)
         schedule = Schedule(permutation_matrices,probabilities)
-        self._switch = Switch(traffic_matrix.shape[0], traffic_matrix.shape[1], schedule)
+        self._switch = Switch(size, size, schedule)
         self._env = simpy.Environment()
 
     def evaluate(self):
