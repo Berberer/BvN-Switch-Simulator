@@ -8,7 +8,7 @@ from simulated.Schedule import Schedule
 
 class Run(object):
 
-    def __init__(self, heuristic, size, seed, evaluation):
+    def __init__(self, heuristic, size, simulation_length, seed, evaluation):
         super(Run, self).__init__()
         random.seed(seed)
         self._heuristic = heuristic
@@ -19,6 +19,7 @@ class Run(object):
         schedule = Schedule(permutation_matrices,probabilities)
         self._switch = Switch(size, size, schedule)
         self._env = simpy.Environment()
+        self._simulation_length = simulation_length
         self._evaluation = evaluation
         self._evaluation.add_number_of_permutation_matrices(len(permutation_matrices))
         self._generated_packets = 0
@@ -27,7 +28,7 @@ class Run(object):
     def evaluate(self):
         self._env.process(self.traffic_generation_step(self._env, 1))
         self._env.process(self.switch_forwarding_step(self._env, 1))
-        self._env.run(until=10)
+        self._env.run(until=self._simulation_length)
         self._evaluation.add_throughput(self._forwarded_packets / self._generated_packets)
 
     def traffic_generation_step(self, env, tick):
