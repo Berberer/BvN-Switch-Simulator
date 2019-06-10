@@ -45,6 +45,22 @@ def exact(traffic_matrix):
     
     # 2.2 find maximum matching in the bipartite graph
     maxMatching = HopcroftKarp(bpGraph).maximum_matching()
-    print(maxMatching)
+    #print(maxMatching)
+    #{0: 1, 1: 0, 2: 3, 3: 2}
 
-    #3. Schedule
+
+    # 3. Schedule
+    # 3.1 Construct permutation matrix
+    # 3.2 Set weight according to minimum value of A according to M
+    permutation_matrix = np.zeros((len(traffic_matrix),len(traffic_matrix)), dtype="int")
+    weight = 1
+    for src, dst in maxMatching.items():
+        permutation_matrix[src][dst] = 1
+        if weight > traffic_matrix[src][dst]:
+            weight = traffic_matrix[src][dst]
+
+    print(permutation_matrix)
+    print("Min weight:",weight)
+
+
+    
