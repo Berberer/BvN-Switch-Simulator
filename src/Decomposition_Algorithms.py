@@ -25,8 +25,21 @@ def gljd(traffic_matrix):
         probabilities.append(p)
     return permutation_matrices, probabilities
 
+
 def exact(traffic_matrix):
-    #Step 1: Initialization. Set i = 1 and A = C(T)
-    #Step 2: Bipartite match. Construct a bipartite graph from A where each nonzero entry of A has a corresponding edge in the graph. Find a maximum-size matching M of this graph.
-    #Step 3: Schedule. Construct a permutation P(i) which corresponds to the matching M. Set the weight based on the minimum entry value of A corresponding to the edges of M:phi(i) = min(e,f) element M, a(e,f)
-    #Setp 4: Update and loop. Set A = A - phi(i)*P(i) and i = i+1. If any nonzero entries of A remain, go to Step 2. Otherwise end.
+    # 1. Initialization
+    i = 1
+    A = traffic_matrix
+    bpGraph = []
+
+    # 2. Bipartite matching
+    # 2.1 create bipartite graph from traffic matrix
+    for lineNum, line in enumerate(traffic_matrix):
+        bpGraphLine = []
+        for elementNum, element in enumerate(line):
+            if element > 0:
+                bpGraphLine.append(1)
+            else:
+                bpGraphLine.append(0)
+        bpGraph.append(bpGraphLine)
+    # 2.2 find maximum matching in the bipartite graph
