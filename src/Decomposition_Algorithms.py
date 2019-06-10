@@ -1,4 +1,5 @@
 import numpy as np
+from hopcroftkarp import HopcroftKarp
 
 def gljd(traffic_matrix):
     permutation_matrices = []
@@ -30,16 +31,20 @@ def exact(traffic_matrix):
     # 1. Initialization
     i = 1
     A = traffic_matrix
-    bpGraph = []
+    bpGraph = {}
 
     # 2. Bipartite matching
     # 2.1 create bipartite graph from traffic matrix
     for lineNum, line in enumerate(traffic_matrix):
-        bpGraphLine = []
+        currDestinations = set()
         for elementNum, element in enumerate(line):
             if element > 0:
-                bpGraphLine.append(1)
-            else:
-                bpGraphLine.append(0)
-        bpGraph.append(bpGraphLine)
+                currDestinations.add(elementNum)
+
+        bpGraph[lineNum] = currDestinations
+    
     # 2.2 find maximum matching in the bipartite graph
+    maxMatching = HopcroftKarp(bpGraph).maximum_matching()
+    print(maxMatching)
+
+    #3. Schedule
