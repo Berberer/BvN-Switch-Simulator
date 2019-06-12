@@ -103,6 +103,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-/data
-src/data/
+data/*.json
+src/data/*.json
 .DS_Store

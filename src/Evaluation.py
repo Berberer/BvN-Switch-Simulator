@@ -45,3 +45,24 @@ class Evaluation(object):
             "throughput_max": float(throughputs.max()),
             "throughput_min": float(throughputs.min())
         }
+
+    def get_results_csv_line(self):
+        results = self.get_results()
+        return "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}".format(
+            str(results["packet_delay_average"]),
+            str(results["packet_delay_variance"]),
+            str(results["packet_delay_max"]),
+            str(results["packet_delay_min"]),
+            str(results["queue_length_average"]),
+            str(results["queue_length_variance"]),
+            str(results["queue_length_max"]),
+            str(results["queue_length_min"]),
+            str(results["permutation_matrix_amount_average"]),
+            str(results["permutation_matrix_amount_variance"]),
+            str(results["permutation_matrix_amount_max"]),
+            str(results["permutation_matrix_amount_min"]),
+            str(results["throughput_average"]),
+            str(results["throughput_variance"]),
+            str(results["throughput_max"]),
+            str(results["throughput_min"]),
+        )
