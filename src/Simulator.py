@@ -1,13 +1,14 @@
 import json
 import click
-from Decomposition_Algorithms import gljd,exact
+from Decomposition_Algorithms import gljd,exact,qbvn
 from Simulation_Run import Run
 from Evaluation import Evaluation
 
 # TODO: Add the remaining heuristics
 heuristics = {
     "GLJD": gljd,
-    "EXACT": exact
+    "EXACT": exact,
+    "QBVN": qbvn
 }
 
 @click.command()

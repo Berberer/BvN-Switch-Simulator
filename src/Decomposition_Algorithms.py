@@ -68,5 +68,30 @@ def exact(traffic_matrix):
         traffic_matrix = np.subtract(traffic_matrix,np.multiply(weight,permutation_matrix))
         print(traffic_matrix)
 
+def qbvn(traffic_matrix):
+    #TODO: Make this configurable?
+    blow_up_factor = 10
 
-    
+    #Blow up matix and round to integers
+    matrix = traffic_matrix * blow_up_factor
+    matrix = np.round(matrix)
+
+    size = len(traffic_matrix)
+    permutation_matrices = []
+    in_start = 0
+    for i in range(blow_up_factor):
+        permutation_matrix = np.zeros(matrix.shape, dtype="int")
+        for in_counter in range(size):
+            in_port = (in_start + in_counter) % size
+            for out_port in range(size):
+                #Is there still traffic for this out port and is out port not yet served?
+                if matrix[in_port][out_port] > 0 and np.max(permutation_matrix[:,out_port]) == 0:
+                    permutation_matrix[in_port][out_port] = 1
+                    matrix[in_port][out_port] -=1
+                    break
+        permutation_matrices.append(permutation_matrix)
+        in_start = (in_start + 1) % size
+    permutation_matrices = np.array(permutation_matrices)
+    unique, counts = np.unique(permutation_matrices,axis=0, return_counts=True)
+    probabilities = counts / np.sum(counts)
+    return unique, probabilities
