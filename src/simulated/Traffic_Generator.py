@@ -7,27 +7,33 @@ class Traffic_Generator(object):
 
     def __init__(self, size, seed):
         super(Traffic_Generator, self).__init__()
-        np.random.seed(seed)
-        sk = sinkhorn_knopp.SinkhornKnopp()
-        self._traffic_matrix = sk.fit(np.random.rand(size, size))
+        self._size = size
+        self._seed = seed
 
-    def get_traffic_matric(self):
+    def generate_doubly_stochastic_traffic(self):
+        np.random.seed(self._seed)
+        sk = sinkhorn_knopp.SinkhornKnopp()
+        self._traffic_matrix = sk.fit(np.random.rand(self._size, self._size))
         return self._traffic_matrix
+
+    def generate_arbitrary_traffic(self):
+        np.random.seed(self._seed)
+        self._traffic_matrix = np.random.rand(self._size, self._size)
+        return self._traffic_matrix
+
 
     def generate_packets(self, timestep):
         packets = []
-        for input, probabilities in enumerate(self._traffic_matrix):
-            chance = random.uniform(0, 1)
-            output = -1
-            sum = 0
+        for input in range(0, self._size):
+            output_probas = self._traffic_matrix[input]
+            # check if we can use the probabilities
+            if all(i == 0 for i in output_probas):
+                output = -1
+            else:
+                proba_sum = sum(output_probas)
+                scaled_probas = [i * (1/proba_sum) for i in output_probas]
+                output_indices = np.arange(self._size)
+                output = np.random.choice(output_indices, p=scaled_probas)
 
-            for o, probability in enumerate(probabilities):
-                sum = sum + probability
-                if chance <= sum:
-                    output = o
-                    break
-
-            if output != -1:
-                packets.append(Packet(input, output, timestep))
-
+            packets.append(Packet(input, output, timestep))
         return packets

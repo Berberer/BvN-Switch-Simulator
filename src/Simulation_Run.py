@@ -13,7 +13,8 @@ class Run(object):
         random.seed(seed)
         self._heuristic = heuristic
         self._traffic_generator = Traffic_Generator(size, seed)
-        traffic_matrix = self._traffic_generator.get_traffic_matric()
+        #traffic_matrix = self._traffic_generator.generate_doubly_stochastic_traffic() 
+        traffic_matrix = self._traffic_generator.generate_arbitrary_traffic()
         print(traffic_matrix)
         permutation_matrices, probabilities = self._heuristic(traffic_matrix)
         schedule = Schedule(permutation_matrices,probabilities)
