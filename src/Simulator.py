@@ -1,6 +1,6 @@
 import json
 import click
-from Decomposition_Algorithms import gljd,exact,qbvn,double
+from Decomposition_Algorithms import gljd,exact,qbvn,double,qbvn_cover
 from Simulation_Run import Run
 from Evaluation import Evaluation
 
@@ -9,7 +9,8 @@ heuristics = {
     "GLJD": gljd,
     "EXACT": exact,
     "QBVN": qbvn,
-    "DOUBLE":double
+    "DOUBLE":double,
+    "QBVN_Cover": qbvn_cover
 }
 
 @click.command()
