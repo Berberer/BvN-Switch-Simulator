@@ -151,7 +151,7 @@ def double(traffic_matrix):
             permutation_matrix[input_port][output_port] = 1
         permutation_matrices.append(permutation_matrix)
 
-    probabilities = [1/len(permutation_matrices) for i permutation_matrices)]
+    probabilities = [1/len(permutation_matrices) for i in permutation_matrices]
     return permutation_matrices, probabilities
     
 
