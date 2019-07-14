@@ -30,12 +30,17 @@ def gljd(traffic_matrix):
 def exact(traffic_matrix):
     # 1. Initialization
     i = 1
-    A = traffic_matrix
     bpGraph = {}
     permutation_matrices = []
 
+    # 2. blow up traffic_matrix
+    N = len(traffic_matrix)
+    T = 1
+    traffic_matrix = traffic_matrix * (N/T)
+    traffic_matrix = np.floor(traffic_matrix)
+    print(traffic_matrix)
 
-    for i in range(0,5): #Replace by while check when maxMatching works correctly
+    while np.any(traffic_matrix):
         print("\n")
         # 2. Bipartite matching
         # 2.1 create bipartite graph from traffic matrix
@@ -47,26 +52,33 @@ def exact(traffic_matrix):
                     currDestinations.add(elementNum)
 
             bpGraph[lineNum] = currDestinations
-        print(bpGraph)
+        print("BP Graph is:",bpGraph)
         
         # 2.2 find maximum matching in the bipartite graph
-        maxMatching = HopcroftKarp(bpGraph).maximum_matching()
-        print(maxMatching)
+        maxMatching = {}
+        (maxMatching, a, u) = bipartiteMatch(bpGraph)
+        print("Max matching matching:",maxMatching)
 
         # 3. Schedule
         # 3.1 Construct permutation matrix
         # 3.2 Set weight according to minimum value of A according to M
         permutation_matrix = np.zeros((len(traffic_matrix),len(traffic_matrix)), dtype="int")
-        weight = 1
-        for src, dst in maxMatching.items():
+        weight = 99999999999
+        for dst,src in maxMatching.items():
             permutation_matrix[src][dst] = 1
             if weight > traffic_matrix[src][dst]:
                 weight = traffic_matrix[src][dst]
+        print("Permutation Matrix",permutation_matrix)
+        permutation_matrices.append(permutation_matrix)
 
         # 4. Update and loop
         # 4.1 Set A to A - weight*P(i) and i = i+1
         traffic_matrix = np.subtract(traffic_matrix,np.multiply(weight,permutation_matrix))
         print(traffic_matrix)
+
+    probabilities = [1/len(permutation_matrices) for i in permutation_matrices]
+
+    return permutation_matrices,probabilities
 
 def qbvn(traffic_matrix):
     #TODO: Make this configurable?
