@@ -142,7 +142,7 @@ def double(traffic_matrix):
         permutation_matrices.append(permutation_matrix)
     
     # Now the final step will produce N arbitrary permutations:
-    for counter in range(0, N):
+    for counter in range(0, len(permutation_matrices)):
         permutation_matrix = np.zeros(traffic_matrix.shape, dtype="int")
         free_destinations = list(range(0, N))
         for input_port in range(0 , N):
@@ -151,7 +151,7 @@ def double(traffic_matrix):
             permutation_matrix[input_port][output_port] = 1
         permutation_matrices.append(permutation_matrix)
 
-    probabilities = [1/len(permutation_matrices) for i in range(0, len(permutation_matrices))]
+    probabilities = [1/len(permutation_matrices) for i permutation_matrices)]
     return permutation_matrices, probabilities
     
 
