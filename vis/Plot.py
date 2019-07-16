@@ -4,10 +4,13 @@ from matplotlib import pyplot
 
 simulation_results = pandas.read_csv("data/results.csv", sep=",", header=0)
 
-heuristics = [ "GLJD", "QBVN" ]
+heuristics = [ "GLJD", "QBVN", "QBVN_Cover", "EXACT", "DOUBLE" ]
 colors = {
-    "GLJD": (1, 0, 0, 0.5),
-    "QBVN": (0, 0, 1, 0.5)
+    "GLJD": (0, 1, 0, 0.5),
+    "QBVN": (0, 0, 1, 0.5),
+    "QBVN_Cover": (0, 1, 1, 0.5),
+    "EXACT": (1, 0, 0, 0.5),
+    "DOUBLE": (1, 0, 1, 0.5)
 }
 
 heuristic_data = {}
