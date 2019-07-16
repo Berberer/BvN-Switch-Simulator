@@ -1,5 +1,4 @@
 import numpy as np
-from hopcroftkarp import HopcroftKarp
 
 def gljd(traffic_matrix):
     permutation_matrices = []
@@ -254,4 +253,5 @@ def qbvn_cover(traffic_matrix):
     permutation_matrices = np.array(permutation_matrices)
     unique, counts = np.unique(permutation_matrices,axis=0, return_counts=True)
     probabilities = counts / np.sum(counts)
+    print (unique)
     return unique, probabilities
