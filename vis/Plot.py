@@ -34,3 +34,4 @@ def plot_switch_size_to_result(simulation_length, result_row, result_label, file
 plot_switch_size_to_result(100, "throughput", "Throughput", "SwitchSizeToThroughput.png")
 plot_switch_size_to_result(100, "permutation_matrix_amount", "Number of Permutation Matrices", "SwitchSizeToMatrixNumber.png")
 plot_switch_size_to_result(100, "queue_length", "Average Queue Length", "SwitchSizeToQueueLength.png")
+plot_switch_size_to_result(100, "packet_delay", "Average Packet Delay", "SwitchSizeToPacketDelay.png")
