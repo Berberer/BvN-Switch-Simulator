@@ -38,26 +38,21 @@ def exact(traffic_matrix):
     T = 1
     traffic_matrix = traffic_matrix * (N/T)
     traffic_matrix = np.floor(traffic_matrix)
-    print(traffic_matrix)
 
     while np.any(traffic_matrix):
-        print("\n")
         # 2. Bipartite matching
         # 2.1 create bipartite graph from traffic matrix
         for lineNum, line in enumerate(traffic_matrix):
             currDestinations = set()
-            print(currDestinations)
             for elementNum, element in enumerate(line):
                 if element > 0:
                     currDestinations.add(elementNum)
 
             bpGraph[lineNum] = currDestinations
-        print("BP Graph is:",bpGraph)
-        
+
         # 2.2 find maximum matching in the bipartite graph
         maxMatching = {}
         (maxMatching, a, u) = bipartiteMatch(bpGraph)
-        print("Max matching matching:",maxMatching)
 
         # 3. Schedule
         # 3.1 Construct permutation matrix
@@ -68,13 +63,11 @@ def exact(traffic_matrix):
             permutation_matrix[src][dst] = 1
             if weight > traffic_matrix[src][dst]:
                 weight = traffic_matrix[src][dst]
-        print("Permutation Matrix",permutation_matrix)
         permutation_matrices.append(permutation_matrix)
 
         # 4. Update and loop
         # 4.1 Set A to A - weight*P(i) and i = i+1
         traffic_matrix = np.subtract(traffic_matrix,np.multiply(weight,permutation_matrix))
-        print(traffic_matrix)
 
     probabilities = [1/len(permutation_matrices) for i in permutation_matrices]
 
@@ -118,8 +111,6 @@ def double(traffic_matrix):
     T = 1
     A = C * (N/T)
     A = np.floor(A)
- #   print("Blown up T")
- #   print (str(A))
     # We now color the graph iteratively, since mirko is too lazy to look for an appropirate algorithm, we use the matching one:
     # Each matching represents one color, after such a matching has been found, we remove the matching from the (multi-) graph and
     # look for a new matching
@@ -133,18 +124,12 @@ def double(traffic_matrix):
             for i in range(0, int(element)):
                 currDestinations.append(elementNum)
         bpGraph[lineNum] = currDestinations
-#   print("Biparite Graph:")
-#    print(bpGraph)
-    
+
     permutation_matrices = []
     # As long as we did not split up A entirely
     while any (len(x) > 0 for x in bpGraph.values()):
- #       print("Biparite graph:")
- #       print(bpGraph)
         matching = {}
         (matching, a, u) = bipartiteMatch(bpGraph)
-#        print("Matching:")
-#        print(matching)
         # Each matching/color corresponds to a permutation matrix
         # Create permutation matrix and remove edge from biparite graph
         permutation_matrix = np.zeros(traffic_matrix.shape, dtype="int")
@@ -152,7 +137,7 @@ def double(traffic_matrix):
             permutation_matrix[input_port][output_port] = 1
             bpGraph[input_port].remove(output_port)
         permutation_matrices.append(permutation_matrix)
-    
+
     # Now the final step will produce N arbitrary permutations:
     for counter in range(0, len(permutation_matrices)):
         permutation_matrix = np.zeros(traffic_matrix.shape, dtype="int")
@@ -165,7 +150,7 @@ def double(traffic_matrix):
 
     probabilities = [1/len(permutation_matrices) for i in permutation_matrices]
     return permutation_matrices, probabilities
-    
+
 
 # Copyright: http://code.activestate.com/recipes/123641-hopcroft-karp-bipartite-matching/
 # Hopcroft-Karp bipartite max-cardinality matching and max independent set
@@ -178,7 +163,7 @@ def bipartiteMatch(graph):
 	of the maximum independent set in U, and B is the part of the MIS in V.
 	The same object may occur in both U and V, and is treated as two
 	distinct vertices if this happens.'''
-	
+
 	# initialize greedy matching (redundant, but faster than full search)
 	matching = {}
 	for u in graph:
@@ -186,7 +171,7 @@ def bipartiteMatch(graph):
 			if v not in matching:
 				matching[v] = u
 				break
-	
+
 	while 1:
 		# structure residual graph into layers
 		# pred[u] gives the neighbor in the previous layer for u in U
@@ -199,7 +184,7 @@ def bipartiteMatch(graph):
 		for v in matching:
 			del pred[matching[v]]
 		layer = list(pred)
-		
+
 		# repeatedly extend layering structure by another pair of layers
 		while layer and not unmatched:
 			newLayer = {}
@@ -215,7 +200,7 @@ def bipartiteMatch(graph):
 					pred[matching[v]] = v
 				else:
 					unmatched.append(v)
-		
+
 		# did we finish layering without finding any alternating paths?
 		if not unmatched:
 			unlayered = {}
@@ -241,9 +226,8 @@ def bipartiteMatch(graph):
 			return 0
 
 		for v in unmatched: recurse(v)
-    
-    
-    
+
+
 def qbvn_cover(traffic_matrix):
     #TODO: Make this configurable?
     blow_up_factor = 10
