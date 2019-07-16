@@ -4,7 +4,6 @@ from Decomposition_Algorithms import gljd,exact,qbvn,double,qbvn_cover
 from Simulation_Run import Run
 from Evaluation import Evaluation
 
-# TODO: Add the remaining heuristics
 heuristics = {
     "GLJD": gljd,
     "EXACT": exact,
