@@ -238,7 +238,7 @@ def qbvn_cover(traffic_matrix):
     size = len(traffic_matrix)
     permutation_matrices = []
     in_start = 0
-    while np.max(traffic_matrix) != 0:
+    while np.max(matrix) != 0:
         permutation_matrix = np.zeros(matrix.shape, dtype="int")
         for in_counter in range(size):
             in_port = (in_start + in_counter) % size
