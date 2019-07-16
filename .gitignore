@@ -105,4 +105,5 @@ venv.bak/
 
 data/*.json
 src/data/*.json
+vis/*.png
 .DS_Store
