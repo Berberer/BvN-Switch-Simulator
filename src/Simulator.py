@@ -48,7 +48,7 @@ def simulate(heuristic, size, runs, length, max_queue_length):
     evaluation = Evaluation()
     for i in range(runs):
         print("##### Run {} #####".format(i + 1))
-        run = Run(heuristics[heuristic], size, length, i, evaluation, max_queue_length)
+        run = Run(heuristics[heuristic], size, max_queue_length, length, i, evaluation)
         run.evaluate()
     print("\n\n##### Results #####")
     print(json.dumps(evaluation.get_results(), indent=4))
