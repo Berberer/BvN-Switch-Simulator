@@ -1,8 +1,11 @@
 import numpy
 import pandas
 from matplotlib import pyplot
+from sqlalchemy import create_engine
 
 simulation_results = pandas.read_csv("data/results.csv", sep=",", header=0)
+engine = create_engine('sqlite:///:memory:', echo=False)
+simulation_results.to_sql('results', con=engine)
 
 heuristics = [ "GLJD", "QBVN", "QBVN_Cover", "EXACT", "DOUBLE" ]
 colors = {
@@ -17,21 +20,24 @@ heuristic_data = {}
 for h in heuristics:
     heuristic_data[h] = simulation_results[simulation_results["heuristic"] == h]
 
-def plot_switch_size_to_result(simulation_length, result_row, result_label, file_name):
-    switch_sizes = heuristic_data[heuristics[0]]["switch_size"].unique()
+def query_data(columns_clause, where_clause):
+    query = "SELECT {} FROM results WHERE {}".format(columns_clause, where_clause)
+    return zip(*engine.execute(query).fetchall())
+
+def plot_line_with_std_deviation(simulation_length, x, x_label, y, y_label, file_name):
     pyplot.figure()
-    pyplot.xlabel("Switch Size")
-    pyplot.ylabel(result_label)
+    pyplot.xlabel(x_label)
+    pyplot.ylabel(y_label)
     for heuristic, data in heuristic_data.items():
-        data_with_correct_length = data[data["simulation_length"] == simulation_length]
-        values = data_with_correct_length["{}_average".format(result_row)].to_numpy()
-        std_deviations = numpy.sqrt(data_with_correct_length["{}_variance".format(result_row)].to_numpy())
-        pyplot.errorbar(switch_sizes, values, yerr=std_deviations, color=colors[heuristic], label=heuristic)
+        columns_clause = "{}, {}_average, {}_variance".format(x, y, y)
+        where_clause =  "heuristic='{}' AND simulation_length={}".format(heuristic, simulation_length)
+        sizes, averages, variances = query_data(columns_clause, where_clause)
+        pyplot.errorbar(sizes, averages, yerr=numpy.sqrt(variances), color=colors[heuristic], label=heuristic)
     pyplot.legend()
     pyplot.tight_layout()
     pyplot.savefig("vis/{}".format(file_name))
 
-plot_switch_size_to_result(100, "throughput", "Throughput", "SwitchSizeToThroughput.png")
-plot_switch_size_to_result(100, "permutation_matrix_amount", "Number of Permutation Matrices", "SwitchSizeToMatrixNumber.png")
-plot_switch_size_to_result(100, "queue_length", "Average Queue Length", "SwitchSizeToQueueLength.png")
-plot_switch_size_to_result(100, "packet_delay", "Average Packet Delay", "SwitchSizeToPacketDelay.png")
+plot_line_with_std_deviation(100, "switch_size", "Switch Size", "throughput", "Throughput", "SwitchSizeToThroughput.png")
+plot_line_with_std_deviation(100, "switch_size", "Switch Size", "permutation_matrix_amount", "Number of Permutation Matrices", "SwitchSizeToMatrixNumber.png")
+plot_line_with_std_deviation(100, "switch_size", "Switch Size", "queue_length", "Average Queue Length", "SwitchSizeToQueueLength.png")
+plot_line_with_std_deviation(100, "switch_size", "Switch Size", "packet_delay", "Average Packet Delay", "SwitchSizeToPacketDelay.png")
