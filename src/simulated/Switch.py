@@ -1,8 +1,9 @@
 class Switch(object):
 
-    def __init__(self, inputs_number, outputs_number, schedule):
+    def __init__(self, inputs_number, outputs_number, schedule, max_queue_length):
         super(Switch, self).__init__()
         self._schedule = schedule
+        self._max_queue_length = max_queue_length
         self._input_queues = []
         for input in range(inputs_number):
             self._input_queues.append([])
@@ -11,7 +12,11 @@ class Switch(object):
 
     def packets_arrive(self, packets):
         for packet in packets:
-            self._input_queues[packet.get_source()][packet.get_destination()].append(packet)
+            queue_length = self.get_queue_length(packet.get_source())
+            if queue_length >= self._max_queue_length:
+                print("Drop packet {}".format(packet))
+            else:
+                self._input_queues[packet.get_source()][packet.get_destination()].append(packet)
 
     def forward_packets(self):
         permutation_matrix = self._schedule.get_random_permutation_matrix()
@@ -33,3 +38,10 @@ class Switch(object):
                 length = length + len(virtual_queue)
             queue_lengths.append(length)
         return queue_lengths
+
+    def get_queue_length(self, queue_no):
+        length = 0
+        queue = self._input_queues[queue_no]
+        for virtual_queue in queue:
+                length = length + len(virtual_queue)
+        return length

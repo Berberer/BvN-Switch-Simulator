@@ -37,11 +37,18 @@ heuristics = {
     prompt="Length of the runs",
     help="Select how many timesteps one runs shall be simulated (at least 1)"
 )
-def simulate(heuristic, size, runs, length):
+@click.option(
+    "--max_queue_length",
+    type=click.IntRange(min=1),
+    required=False,
+    default=10,
+    help="Select how many packets shall be stored in a particular input queue (at least 1)"
+)
+def simulate(heuristic, size, runs, length, max_queue_length):
     evaluation = Evaluation()
     for i in range(runs):
         print("##### Run {} #####".format(i + 1))
-        run = Run(heuristics[heuristic], size, length, i, evaluation)
+        run = Run(heuristics[heuristic], size, length, i, evaluation, max_queue_length)
         run.evaluate()
     print("\n\n##### Results #####")
     print(json.dumps(evaluation.get_results(), indent=4))
