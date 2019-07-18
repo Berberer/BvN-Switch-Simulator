@@ -25,7 +25,7 @@ def plot_line_with_std_deviation(x, x_label, y, y_label, where_clause, file_name
     pyplot.xlabel(x_label)
     pyplot.ylabel(y_label)
     columns_clause = "{}, {}_average, {}_variance".format(x, y, y)
-    for heuristic in ["GLJD"]:
+    for heuristic in heuristics:
         where_clause =  "heuristic='{}' AND {}".format(heuristic, where_clause)
         sizes, averages, variances = query_data(columns_clause, where_clause)
         pyplot.errorbar(sizes, averages, yerr=numpy.sqrt(variances), color=colors[heuristic], label=heuristic)
