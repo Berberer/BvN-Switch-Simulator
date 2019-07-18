@@ -8,11 +8,12 @@ from simulated.Schedule import Schedule
 
 class Run(object):
 
-    def __init__(self, heuristic, size, max_queue_length, simulation_length, seed, evaluation):
+    def __init__(self, heuristic, size, max_queue_length, simulation_length, seed, evaluation, load = 1.0):
         super(Run, self).__init__()
         random.seed(seed)
         self._heuristic = heuristic
-        self._traffic_generator = Traffic_Generator(size, seed)
+        # calling this method with load 1.0 (default parameter) results in a doubly stochastic matrix
+        self._traffic_generator = Traffic_Generator(size, seed, load)
         traffic_matrix = self._traffic_generator.generate_doubly_stochastic_traffic()
         print(traffic_matrix)
         permutation_matrices, probabilities = self._heuristic(traffic_matrix)

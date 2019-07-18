@@ -9,6 +9,7 @@ heuristics = {
     "DOUBLE":double,
     "QBVN_Cover": qbvn_cover
 }
+loads = [1.0, 0.8, 0.6, 0.4]
 seeds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
 switch_sizes = [2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25]
 max_queue_lengths = [10,25,50]
@@ -24,8 +25,9 @@ with open("data/results.csv", "w+") as file:
                 for l in simulation_lengths:
                     evaluation = Evaluation()
                     for i in seeds:
-                        print("##### Run {} #####".format(i + 1))
-                        run = Run(heuristics[h], s, m, l, i, evaluation)
-                        run.evaluate()
-                    line = h + "," + str(s) + "," + str(m) + "," + str(l) + "," + evaluation.get_results_csv_line() + "\n"
+                        for load in loads: 
+                            print("##### Run {} #####".format(i + 1))
+                            run = Run(heuristics[h], s, m, l, i, evaluation, load = load)
+                            run.evaluate()
+                    line = h + "," + str(s) + "," + str(m) + "," + str(l) + "," str(load)+","+ evaluation.get_results_csv_line() + "\n"
                     file.write(line)
