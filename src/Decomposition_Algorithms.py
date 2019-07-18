@@ -269,7 +269,3 @@ def qbvn_cover(traffic_matrix):
     unique, counts = np.unique(permutation_matrices,axis=0, return_counts=True)
     probabilities = counts / np.sum(counts)
     return unique, probabilities
-
-exact(np.array([[0.03804714, 0.01434283, 0.04761003],
- [0.03574868, 0.04443422, 0.0198171 ],
- [0.02620989, 0.04119092, 0.03259919]]))
