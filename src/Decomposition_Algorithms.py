@@ -31,9 +31,21 @@ def exact(traffic_matrix):
     i = 1
     bpGraph = {}
     permutation_matrices = []
+    probabilities = []
 
     # 2. blow up traffic_matrix
-    blow_up_factor = 10
+    minimum = traffic_matrix.min()
+    blow_up_factor = 1
+    decimals_started = False
+    for n in str(minimum):
+        if decimals_started:
+            if n == "0":
+                blow_up_factor = blow_up_factor + 1
+            else:
+                break
+        else:
+            decimals_started = n=="."
+    blow_up_factor = 10 ** blow_up_factor
     traffic_matrix = traffic_matrix * blow_up_factor
     traffic_matrix = np.round(traffic_matrix)
 
@@ -62,15 +74,16 @@ def exact(traffic_matrix):
             if weight > traffic_matrix[src][dst]:
                 weight = traffic_matrix[src][dst]
         permutation_matrices.append(permutation_matrix)
+        probabilities.append(weight)
 
         # 4. Update and loop
         # 4.1 Set A to A - weight*P(i) and i = i+1
         traffic_matrix = np.subtract(traffic_matrix,np.multiply(weight,permutation_matrix))
 
-    probabilities = [1/len(permutation_matrices) for i in permutation_matrices]
-
-    print("Probabilities are",probabilities)
-    print("Permutation Matrices are",permutation_matrices)
+    probabilities_vector = np.array(probabilities)
+    probabilities_vector = probabilities_vector / probabilities_vector.min()
+    probabilities_vector = probabilities_vector / probabilities_vector.sum()
+    probabilities = probabilities_vector.tolist()
 
     return permutation_matrices,probabilities
 
@@ -256,3 +269,7 @@ def qbvn_cover(traffic_matrix):
     unique, counts = np.unique(permutation_matrices,axis=0, return_counts=True)
     probabilities = counts / np.sum(counts)
     return unique, probabilities
+
+exact(np.array([[0.03804714, 0.01434283, 0.04761003],
+ [0.03574868, 0.04443422, 0.0198171 ],
+ [0.02620989, 0.04119092, 0.03259919]]))
