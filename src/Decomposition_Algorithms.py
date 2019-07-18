@@ -37,7 +37,7 @@ def exact(traffic_matrix):
     minimum = traffic_matrix.min()
     blow_up_factor = 1
     decimals_started = False
-    for n in str(minimum):
+    for n in "{:.25f}".format(minimum):
         if decimals_started:
             if n == "0":
                 blow_up_factor = blow_up_factor + 1
