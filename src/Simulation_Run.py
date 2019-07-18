@@ -30,7 +30,10 @@ class Run(object):
         self._env.process(self.traffic_generation_step(self._env, 1))
         self._env.process(self.switch_forwarding_step(self._env, 1))
         self._env.run(until=self._simulation_length)
-        self._evaluation.add_throughput(self._forwarded_packets / self._generated_packets)
+        throughput = 1.0
+        if self._generated_packets > 0:
+            throughput = self._forwarded_packets / self._generated_packets
+        self._evaluation.add_throughput(throughput)
 
     def traffic_generation_step(self, env, tick):
         while True:
