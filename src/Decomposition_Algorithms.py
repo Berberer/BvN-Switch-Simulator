@@ -33,10 +33,9 @@ def exact(traffic_matrix):
     permutation_matrices = []
 
     # 2. blow up traffic_matrix
-    N = len(traffic_matrix)
-    T = 1
-    traffic_matrix = traffic_matrix * (N/T)
-    traffic_matrix = np.floor(traffic_matrix)
+    blow_up_factor = 10
+    traffic_matrix = traffic_matrix * blow_up_factor
+    traffic_matrix = np.round(traffic_matrix)
 
     while np.any(traffic_matrix):
         # 2. Bipartite matching
@@ -69,6 +68,9 @@ def exact(traffic_matrix):
         traffic_matrix = np.subtract(traffic_matrix,np.multiply(weight,permutation_matrix))
 
     probabilities = [1/len(permutation_matrices) for i in permutation_matrices]
+
+    print("Probabilities are",probabilities)
+    print("Permutation Matrices are",permutation_matrices)
 
     return permutation_matrices,probabilities
 
