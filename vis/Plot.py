@@ -20,13 +20,13 @@ def query_data(columns_clause, where_clause):
     query = "SELECT {} FROM results WHERE {}".format(columns_clause, where_clause)
     return zip(*engine.execute(query).fetchall())
 
-def plot_line_with_std_deviation(x, x_label, y, y_label, where_clause, file_name):
+def plot_line_with_std_deviation(x, x_label, y, y_label, param_where_clause, file_name):
     pyplot.figure()
     pyplot.xlabel(x_label)
     pyplot.ylabel(y_label)
     columns_clause = "{}, {}_average, {}_variance".format(x, y, y)
     for heuristic in heuristics:
-        where_clause =  "heuristic='{}' AND {}".format(heuristic, where_clause)
+        where_clause =  "heuristic='{}' AND {}".format(heuristic, param_where_clause)
         sizes, averages, variances = query_data(columns_clause, where_clause)
         pyplot.errorbar(sizes, averages, yerr=numpy.sqrt(variances), color=colors[heuristic], label=heuristic)
     pyplot.legend()
@@ -57,7 +57,7 @@ def plot_heuristic_throughput_for_different_queue_lengths(simulation_length, heu
 
 where_clause = "simulation_length=100 AND max_queue_length=50 AND load=1.0"
 plot_line_with_std_deviation("switch_size", "Switch Size", "throughput", "Throughput", where_clause, "SwitchSizeToThroughput.png")
-plot_line_with_std_deviation("switch_size", "Switch Size", "permutation_matrix_amount", where_clause, "Number of Permutation Matrices", "SwitchSizeToMatrixNumber.png")
+plot_line_with_std_deviation("switch_size", "Switch Size", "permutation_matrix_amount", "Number of Permutation Matrices", where_clause, "SwitchSizeToMatrixNumber.png")
 plot_line_with_std_deviation("switch_size", "Switch Size", "queue_length", "Average Queue Length", where_clause, "SwitchSizeToQueueLength.png")
 plot_line_with_std_deviation("switch_size", "Switch Size", "packet_delay", "Average Packet Delay", where_clause, "SwitchSizeToPacketDelay.png")
 
