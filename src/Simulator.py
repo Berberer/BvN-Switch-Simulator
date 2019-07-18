@@ -44,11 +44,17 @@ heuristics = {
     default=10,
     help="Select how many packets shall be stored in a particular input queue (at least 1)"
 )
-def simulate(heuristic, size, runs, length, max_queue_length):
+@click.option(
+    "--load",
+    type=click.FloatRange(min=0,max=1),
+    prompt="Put in load",
+    help="Select how many simulation runs shall be perfomed (at least 1)"
+)
+def simulate(heuristic, size, runs, length, max_queue_length, load):
     evaluation = Evaluation()
     for i in range(runs):
         print("##### Run {} #####".format(i + 1))
-        run = Run(heuristics[heuristic], size, max_queue_length, length, i, evaluation)
+        run = Run(heuristics[heuristic], size, max_queue_length, length, i, evaluation, load=load)
         run.evaluate()
     print("\n\n##### Results #####")
     print(json.dumps(evaluation.get_results(), indent=4))
